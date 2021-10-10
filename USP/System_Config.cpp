@@ -45,15 +45,14 @@ void System_Resource_Init(void)
 {
   /* Drivers Init ---------------------*/
   Timer_Init(&htim3, USE_HAL_DELAY);
-	
-//	Uart_Init(&huart1, Uart1_Rx_Buff, USART1_RX_BUFFER_SIZE, User_UART1_RxCpltCallback);
   
   /* RTOS resources Init --------------*/
-//  USART_TxPort    = xQueueCreate(4,sizeof(USART_COB));
+  USART_TxPort = xQueueCreate(2,1);
 	
   /* Other resources Init -------------*/
 	
 	// IMU
+	HAL_Delay(2000);
 	imu.Init(IMU_SDA_GPIO_Port, IMU_SCL_Pin, IMU_SDA_Pin);
 	
   /* Service configurations -----------*/

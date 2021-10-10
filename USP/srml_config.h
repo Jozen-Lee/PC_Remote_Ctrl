@@ -37,7 +37,7 @@
 #define USE_SRML_I2C                      0
 #define USE_SRML_SPI                      0
 #define USE_SRML_TIMER                    1
-#define USE_SRML_UART                     0
+#define USE_SRML_UART                     1
 
 #define USE_SRML_BMX055                   0
 #define USE_SRML_FATFS                    0

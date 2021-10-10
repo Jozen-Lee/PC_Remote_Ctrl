@@ -339,7 +339,7 @@
               <MiscControls>--cpp11</MiscControls>
               <Define>USE_HAL_DRIVER,STM32F103xB,MOTION_DRIVER_TARGET_MSP430,EMPL</Define>
               <Undefine></Undefine>
-              <IncludePath>../Core/Inc;   ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy;   ../Drivers/STM32F1xx_HAL_Driver/Inc;   ../Middlewares/Third_Party/FreeRTOS/Source/include;   ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS;   ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM3;   ../Drivers/CMSIS/Device/ST/STM32F1xx/Include;   ../Drivers/CMSIS/Include;   ..\SRML;   ..\TSML;   ..\USP</IncludePath>
+              <IncludePath>../Core/Inc;    ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy;    ../Drivers/STM32F1xx_HAL_Driver/Inc;    ../Middlewares/Third_Party/FreeRTOS/Source/include;    ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS;    ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM3;    ../Drivers/CMSIS/Device/ST/STM32F1xx/Include;    ../Drivers/CMSIS/Include;    ..\SRML;    ..\TSML;    ..\USP</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -988,6 +988,11 @@
               <FileName>tutu_drv_i2c.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\TSML\Drivers\Components\I2C\tutu_drv_i2c.c</FilePath>
+            </File>
+            <File>
+              <FileName>drv_uart.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\SRML\Drivers\Components\drv_uart.c</FilePath>
             </File>
           </Files>
         </Group>

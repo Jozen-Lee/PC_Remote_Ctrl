@@ -102,30 +102,8 @@ void Uart_Init(UART_HandleTypeDef *huart, uint8_t *Rxbuffer, uint32_t length, us
 	if (huart == NULL)
 		Error_Handler();
 	else {}
-
-	if(huart->Instance == UART4)
-	{
-		usart4_manage_obj.rx_buffer = Rxbuffer;
-		usart4_manage_obj.rx_buffer_size = length;
-		usart4_manage_obj.uart_h = huart;
-    usart4_manage_obj.call_back_f = fun;
-		__HAL_UART_CLEAR_IDLEFLAG(huart);
-		__HAL_UART_ENABLE_IT(huart, UART_IT_IDLE);
-		HAL_UART_Receive_DMA(huart, Rxbuffer, length);
-	}
-
-	else if (huart->Instance == UART5)
-	{
-		usart5_manage_obj.rx_buffer = Rxbuffer;
-		usart5_manage_obj.rx_buffer_size = length;
-		usart5_manage_obj.uart_h = huart;
-    usart5_manage_obj.call_back_f = fun;
-		__HAL_UART_CLEAR_IDLEFLAG(huart);
-		__HAL_UART_ENABLE_IT(huart, UART_IT_IDLE);
-		HAL_UART_Receive_DMA(huart, Rxbuffer, length);
-	}
     
-	else if (huart->Instance == USART1)
+	if (huart->Instance == USART1)
 	{
 		usart1_manage_obj.rx_buffer = Rxbuffer;
 		usart1_manage_obj.rx_buffer_size = length;
@@ -157,7 +135,30 @@ void Uart_Init(UART_HandleTypeDef *huart, uint8_t *Rxbuffer, uint32_t length, us
 		__HAL_UART_ENABLE_IT(huart, UART_IT_IDLE);
 		HAL_UART_Receive_DMA(huart, Rxbuffer, length);
 	}
-   
+
+#if defined(STM32F405xx) || defined(STM32F407xx) || defined(STM32F429xx)
+	else if(huart->Instance == UART4)
+	{
+		usart4_manage_obj.rx_buffer = Rxbuffer;
+		usart4_manage_obj.rx_buffer_size = length;
+		usart4_manage_obj.uart_h = huart;
+    usart4_manage_obj.call_back_f = fun;
+		__HAL_UART_CLEAR_IDLEFLAG(huart);
+		__HAL_UART_ENABLE_IT(huart, UART_IT_IDLE);
+		HAL_UART_Receive_DMA(huart, Rxbuffer, length);
+	}
+
+	else if (huart->Instance == UART5)
+	{
+		usart5_manage_obj.rx_buffer = Rxbuffer;
+		usart5_manage_obj.rx_buffer_size = length;
+		usart5_manage_obj.uart_h = huart;
+    usart5_manage_obj.call_back_f = fun;
+		__HAL_UART_CLEAR_IDLEFLAG(huart);
+		__HAL_UART_ENABLE_IT(huart, UART_IT_IDLE);
+		HAL_UART_Receive_DMA(huart, Rxbuffer, length);
+	}  
+	
 	else if (huart->Instance == USART6)
 	{
 		usart6_manage_obj.rx_buffer = Rxbuffer;
@@ -168,6 +169,7 @@ void Uart_Init(UART_HandleTypeDef *huart, uint8_t *Rxbuffer, uint32_t length, us
 		__HAL_UART_ENABLE_IT(huart, UART_IT_IDLE);
 		HAL_UART_Receive_DMA(huart, Rxbuffer, length);
 	}
+#endif
 	
 	else
 		Error_Handler();
@@ -223,7 +225,11 @@ static void Uart_Rx_Idle_Callback(usart_manage_obj_t *m_obj)
 	HAL_UART_DMAStop(m_obj->uart_h);
 
   /* handle received data in idle interrupt */
+#if defined(STM32F405xx) || defined(STM32F407xx) || defined(STM32F429xx)
 	usart_rx_num = m_obj->rx_buffer_size - ((DMA_Stream_TypeDef*)m_obj->uart_h->hdmarx->Instance)->NDTR;
+#elif defined(STM32F103xx) || defined(STM32F103xB)
+	usart_rx_num = m_obj->rx_buffer_size - ((DMA_Channel_TypeDef*)m_obj->uart_h->hdmarx->Instance)->CNDTR;
+#endif 
 	if(m_obj->call_back_f != NULL)
 		m_obj->call_back_f(m_obj->rx_buffer, usart_rx_num);
 	
