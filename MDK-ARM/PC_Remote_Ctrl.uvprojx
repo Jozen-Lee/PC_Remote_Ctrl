@@ -339,7 +339,7 @@
               <MiscControls>--cpp11</MiscControls>
               <Define>USE_HAL_DRIVER,STM32F103xB,MOTION_DRIVER_TARGET_MSP430,EMPL</Define>
               <Undefine></Undefine>
-              <IncludePath>../Core/Inc;    ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy;    ../Drivers/STM32F1xx_HAL_Driver/Inc;    ../Middlewares/Third_Party/FreeRTOS/Source/include;    ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS;    ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM3;    ../Drivers/CMSIS/Device/ST/STM32F1xx/Include;    ../Drivers/CMSIS/Include;    ..\SRML;    ..\TSML;    ..\USP</IncludePath>
+              <IncludePath>../Core/Inc;../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy;../Drivers/STM32F1xx_HAL_Driver/Inc;../Middlewares/Third_Party/FreeRTOS/Source/include;../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS;../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM3;../Drivers/CMSIS/Device/ST/STM32F1xx/Include;../Drivers/CMSIS/Include;..\SRML;..\TSML;..\USP;..\USP\Application;..\USP\Middlewares;..\USP\Middlewares\UpperMonitor</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -513,34 +513,34 @@
           <GroupName>Application/Usr/System</GroupName>
           <Files>
             <File>
-              <FileName>System_Config.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\USP\System_Config.cpp</FilePath>
-            </File>
-            <File>
-              <FileName>System_DataPool.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\USP\System_DataPool.cpp</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>Application/Usr/Ctrl</GroupName>
-          <Files>
-            <File>
-              <FileName>srml_config.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\USP\srml_config.h</FilePath>
-            </File>
-            <File>
               <FileName>tsml_config.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\USP\tsml_config.h</FilePath>
             </File>
             <File>
+              <FileName>srml_config.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\USP\Application\srml_config.h</FilePath>
+            </File>
+            <File>
               <FileName>Service_Devices.cpp</FileName>
               <FileType>8</FileType>
-              <FilePath>..\USP\Service_Devices.cpp</FilePath>
+              <FilePath>..\USP\Application\Service_Devices.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>System_Config.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\USP\Application\System_Config.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>System_DataPool.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\USP\Application\System_DataPool.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>Service_Debug.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\USP\Application\Service_Debug.cpp</FilePath>
             </File>
           </Files>
         </Group>
@@ -689,6 +689,36 @@
           </Files>
         </Group>
         <Group>
+          <GroupName>Middlewares/DMP_Lib</GroupName>
+          <Files>
+            <File>
+              <FileName>dmp_cal.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\TSML\Middlewares\Algorithm\DMP\dmp_cal.cpp</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Middlewares/Algorithm</GroupName>
+          <Files>
+            <File>
+              <FileName>pose_cal.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\USP\Middlewares\pose_cal.cpp</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Middlewares/UpperMonitor</GroupName>
+          <Files>
+            <File>
+              <FileName>UpperMonitor.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\USP\Middlewares\UpperMonitor\UpperMonitor.cpp</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
           <GroupName>Middlewares/FreeRTOS</GroupName>
           <GroupOption>
             <CommonProperty>
@@ -809,16 +839,6 @@
               <FileName>port.c</FileName>
               <FileType>1</FileType>
               <FilePath>../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM3/port.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>Middlewares/DMP_Lib</GroupName>
-          <Files>
-            <File>
-              <FileName>dmp_cal.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\TSML\Middlewares\Algorithm\DMP\dmp_cal.cpp</FilePath>
             </File>
           </Files>
         </Group>

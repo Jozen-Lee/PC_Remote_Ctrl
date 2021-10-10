@@ -23,6 +23,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "System_Config.h"
 #include "System_DataPool.h"
+#include "Service_Debug.h"
 
 /* Service */
 #include "Service_Devices.h"
@@ -47,7 +48,7 @@ void System_Resource_Init(void)
   Timer_Init(&htim3, USE_HAL_DELAY);
   
   /* RTOS resources Init --------------*/
-  USART_TxPort = xQueueCreate(2,1);
+  USART_TxPort = xQueueCreate(4,1);
 	
   /* Other resources Init -------------*/
 	
@@ -68,7 +69,6 @@ void System_Tasks_Init(void)
   /* Syetem Service init --------------*/
 //  Service_Debug_Init();
   Service_Devices_Init();
-//  Service_Communication_Init();
 //	
 //  /* Applications Init ----------------*/
 
