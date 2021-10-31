@@ -19,7 +19,6 @@
 #include "Service_Devices.h"
 #include "pose_cal.h"
 /* Private define ------------------------------------------------------------*/
-
 /* Private variables ---------------------------------------------------------*/
 TaskHandle_t DeviceIMU_Handle;
 TaskHandle_t UsartTx_Handle;
@@ -55,11 +54,12 @@ void Service_Devices_Init(void)
 /**
  *@brief IMU数据更新任务
  */ 
+
 void Device_IMU(void *arg)
 {
   /* Cache for Task */
   TickType_t xLastWakeTime_t = xTaskGetTickCount();
-	TickType_t _xTicksToWait = pdMS_TO_TICKS(4);
+	TickType_t _xTicksToWait = pdMS_TO_TICKS(50);
   /* Pre-Load for task */
 	uint16_t count = 0;
   /* Infinite loop */
@@ -72,9 +72,8 @@ void Device_IMU(void *arg)
 		imu_cal.Tetris_AngleCtrl(USART_TxPort);
 		
 		// 用于指示任务正常执行
-		count = (count + 1) % 100;
+		count = (count + 1) % 10;
 		if(!count) HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
-	
 		
 		vTaskDelayUntil(&xLastWakeTime_t, _xTicksToWait);	
 	}
@@ -107,7 +106,7 @@ void AngleCtrl_Task(void *arg)
 {
   /* Cache for Task */
   TickType_t xLastWakeTime_t = xTaskGetTickCount();
-	TickType_t _xTicksToWait = pdMS_TO_TICKS(50);
+	TickType_t _xTicksToWait = pdMS_TO_TICKS(200);
   /* Pre-Load for task */
   /* Infinite loop */
   for(;;)

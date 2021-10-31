@@ -1083,6 +1083,16 @@
           </Files>
         </Group>
         <Group>
+          <GroupName>Arm/Code</GroupName>
+          <Files>
+            <File>
+              <FileName>arm_code.s</FileName>
+              <FileType>2</FileType>
+              <FilePath>..\USP\arm_code.s</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
           <GroupName>::CMSIS</GroupName>
         </Group>
       </Groups>

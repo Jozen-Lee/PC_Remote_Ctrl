@@ -51,45 +51,29 @@ void Pose_Cal::Tetris_AngleCtrl(QueueHandle_t send_queue)
 {
 	uint8_t num, signal;
 	
-//	// 右移
-//	num = 0;
-//	signal = DIR_RIGHT;
-//	if(p_imu->data.pos.pitch > 20.f &&  p_imu->data.pos.pitch < 35.f) num = 1;
-//	else if(p_imu->data.pos.pitch >= 35.f &&  p_imu->data.pos.pitch < 55.f) num = 2;
-//	else if(p_imu->data.pos.pitch >= 55.f &&  p_imu->data.pos.pitch < 90.f) num = 3;
-//	while(num--) xQueueSend(send_queue, &signal, 0);
-//	
-//	// 左移
-//	num = 0;
-//	signal = DIR_LEFT;
-//	if(p_imu->data.pos.pitch < -20.f &&  p_imu->data.pos.pitch > -35.f) num = 1;
-//	else if(p_imu->data.pos.pitch <= -35.f &&  p_imu->data.pos.pitch > -55.f) num = 2;
-//	else if(p_imu->data.pos.pitch <= -55.f &&  p_imu->data.pos.pitch < -90.f) num = 3;
-//	for(int i = 0; i < num; i ++) xQueueSend(send_queue, &signal, 0);	
-	
-	// 右移
-	if(p_imu->data.pos.pitch > 20.f &&  p_imu->data.pos.pitch < 80.f)
+	// 右
+	if(p_imu->data.pos.pitch > 15.f &&  p_imu->data.pos.pitch < 80.f)
 	{
 		signal = DIR_RIGHT;
 		xQueueSend(send_queue, &signal, 0);
 	}
 	
-	// 左移
-	else if(p_imu->data.pos.pitch < -20.f &&  p_imu->data.pos.pitch > -80.f)
+	// 左
+	else if(p_imu->data.pos.pitch < -15.f &&  p_imu->data.pos.pitch > -80.f)
 	{
 		signal = DIR_LEFT;
 		xQueueSend(send_queue, &signal, 0);
 	}
 	
-	// 姿态变换
-	if(p_imu->data.pos.roll < -15.f && p_imu->data.pos.roll > -80.f) 
+	// 上
+	if(p_imu->data.pos.roll < -10.f && p_imu->data.pos.roll > -80.f) 
 	{
 		signal = DIR_UP;
 		xQueueSend(send_queue, &signal, 0);
 	}
 	
-	// 加速下落
-	else if(p_imu->data.pos.roll > 20.f && p_imu->data.pos.roll < 80.f) 
+	// 下
+	else if(p_imu->data.pos.roll > 10.f && p_imu->data.pos.roll < 80.f) 
 	{
 		signal = DIR_DOWN;
 		xQueueSend(send_queue, &signal, 0);
