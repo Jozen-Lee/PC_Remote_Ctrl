@@ -73,8 +73,11 @@ void Device_IMU(void *arg)
 		
 		// 用于指示任务正常执行
 		count = (count + 1) % 10;
-		if(!count) HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
-		
+		if(!count) 
+		{
+			LedFlas();
+//			HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
+		}		
 		vTaskDelayUntil(&xLastWakeTime_t, _xTicksToWait);	
 	}
 }
@@ -93,7 +96,6 @@ void Device_Usart(void *arg)
 		/* 发送数据 */
 		if(xQueueReceive(USART_TxPort,&res,portMAX_DELAY) == pdPASS)
 		{
-//			HAL_UART_Transmit(&huart1,&res,1, 10);
 			HAL_UART_Transmit_DMA(&huart1,&res,1);
 		}
 	}	
@@ -111,7 +113,6 @@ void AngleCtrl_Task(void *arg)
   /* Infinite loop */
   for(;;)
   {
-		
 		vTaskDelayUntil(&xLastWakeTime_t, _xTicksToWait);	
 	}	
 }

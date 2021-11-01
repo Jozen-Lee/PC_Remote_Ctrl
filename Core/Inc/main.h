@@ -32,7 +32,14 @@ extern "C" {
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+extern void LED_ON(void);				// 打开LED
+extern void LED_OFF(void);			// 关闭LED
+extern void LedFlas(void);			// LED闪烁
+extern void Connect(void);			// 串口打印连接信息
+extern void Lost_Connect(void);	// 串口打印失去连接信息
+extern void Delay(void);				// 延时函数
+extern void Sys_Init(void);			// 系统配置初始化
+	
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/

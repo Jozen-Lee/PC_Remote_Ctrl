@@ -49,6 +49,16 @@ USART1_CR1          EQU    (USART1_BASE + 0x0c)
 USART1_CR2          EQU    (USART1_BASE + 0x10) 
 USART1_CR3          EQU    (USART1_BASE + 0x14) 
 USART1_GTPR         EQU    (USART1_BASE + 0x18) 
+	
+;串口2控制                       
+USART2_BASE         EQU    0x40004400 
+USART2_SR           EQU    (USART1_BASE + 0x00) 
+USART2_DR           EQU    (USART1_BASE + 0x04) 
+USART2_BRR          EQU    (USART1_BASE + 0x08) 
+USART2_CR1          EQU    (USART1_BASE + 0x0c) 
+USART2_CR2          EQU    (USART1_BASE + 0x10) 
+USART2_CR3          EQU    (USART1_BASE + 0x14) 
+USART2_GTPR         EQU    (USART1_BASE + 0x18) 
                             
 ;NVIC寄存器地址                
 NVIC_BASE           EQU    0xE000E000 
@@ -127,10 +137,10 @@ Bit30               EQU    0x40000000
 Bit31               EQU    0x80000000 
 
 ;系统时钟树初始化
-		AREA Sys_Clk, CODE, READONLY
-		EXPORT Sys_Clk_Init
+		AREA My_Function, CODE, READONLY
+		EXPORT Sys_Init
 			
-Sys_Clk_Init			
+Sys_Init			
     ;时钟系统设置 
     ldr    r0, =RCC_CR 
     ldr    r1, [r0] 
@@ -195,7 +205,7 @@ PllOk
     ;PC.13通用推挽输出模式 
     str    r1, [r0] 
             
-    ;PA9串口0发射脚 
+    ;PA9串口1发射脚 
     ldr    r0, =GPIOA_CRH 
     ldr    r1, [r0] 
     orr    r1, #(Bit4 :OR: Bit5)          
@@ -204,7 +214,6 @@ PllOk
     and    r1, #~Bit6 
     ;10：复用功能推挽输出模式 
     str    r1, [r0]    
- 
  
     ldr    r0, =USART1_BRR   
     mov    r1, #0x271 
@@ -216,17 +225,27 @@ PllOk
     str    r1, [r0] 
     ;USART模块总使能 发送与接收使能 
     ;71 02 00 00   2c 20 00 00 
-             
-    ;AFIO 参数设置             
-    ;Systick 参数设置 
-    ldr    r0, =SYSTICKRVR           
-    ;Systick装初值 
-    mov    r1, #9000 
+		
+    ;PA2串口2发射脚 
+    ldr    r0, =GPIOA_CRL 
+    ldr    r1, [r0] 
+    orr    r1, #(Bit8 :OR: Bit9)          
+    ;PA.2输出模式,最大速度50MHz  
+    orr    r1, #Bit11 
+    and    r1, #~Bit10 
+    ;3：复用功能推挽输出模式 
+    str    r1, [r0] 		
+		
+    ldr    r0, =USART2_BRR   
+    mov    r1, #0x271 
     str    r1, [r0] 
-    ldr    r0, =SYSTICKCSR           
-    ;设定,启动Systick 
-    mov    r1, #0x03 
+    ;配置波特率-> 115200 
+                   
+    ldr    r0, =USART2_CR1   
+    mov    r1, #0x200c 
     str    r1, [r0] 
+    ;USART模块总使能 发送与接收使能 
+    ;71 02 00 00   2c 20 00 00          
             
     ;NVIC                     
     ;ldr   r0, =SETENA0 
@@ -235,30 +254,8 @@ PllOk
     ;ldr   r0, =SETENA1 
     ;mov   r1, #0x00000100 
     ;str   r1, [r0] 
-              
-    ;切换成用户级线程序模式 
-    ldr    r0, =PSP_TOP    
-		
-    ;初始化线程堆栈 
-    msr    psp, r0 
-    mov    r0, #3 
-    msr    control, r0 
-              
-    ;初始化SRAM寄存器 
-    mov    r1, #0 
-    ldr    r0, =Flag1 
-    str    r1, [r0] 
-    ldr    r0, =DlyI 
-    str    r1, [r0] 
-    ldr    r0, =DlyJ 
-    str    r1, [r0] 
-    ldr    r0, =DlyK 
-    str    r1, [r0] 
-    ldr    r0, =SysTim 
-    str    r1, [r0] 
-		
+               			
 		bx lr
-		END
 
 ;异常程序 
 NMI_Handler 
@@ -287,7 +284,7 @@ TickExit
     bx     lr 
 			
 ; 点亮LED
-		AREA LED, CODE, READONLY
+;		AREA LED, CODE, READONLY
 		EXPORT LED_OFF
 		EXPORT LED_ON
 			
@@ -296,7 +293,7 @@ LED_ON
     mov    r1, #1 
     str    r1, [r0] 
     ;闪烁标志位置为1,下一状态为关闭灯 
-    ;PC.7输出1 
+    ;PC.13输出1 
     ldr    r0, =GPIOC_BSRR 
     ldr    r1, [r0] 
     orr    r1, #Bit13
@@ -308,39 +305,31 @@ LED_OFF
     mov    r1, #0 
     str    r1, [r0] 
     ;闪烁标志位置为0,下一状态为打开灯 
-    ;PC.7输出0 
+    ;PC.13输出0 
     ldr    r0, =GPIOC_BRR 
     ldr    r1, [r0] 
     orr    r1, #Bit13 
     str    r1, [r0] 	
 
 LedEx
-		bx lr
-		END
+		bx lr    
 
-;子程序 串口1发送一个字符 
-send_a_char 
-    push   {r0 - r3} 
-    ldr    r2, =USART1_DR   
-    str    r0, [r2] 
-b1 
-    ldr    r2, =USART1_SR  
-    ldr    r2, [r2] 
-    tst    r2, #0x40 
-    beq    b1 
-    ;发送完成(Transmission complete)等待 
-    pop    {r0 - r3} 
-    bx     lr 
-		
-		AREA LED, CODE, READONLY                              
+
 
 ;串口发送数据
-		AREA USART, CODE, READONLY
+;		AREA USART, CODE, READONLY
 		EXPORT Connect
+		EXPORT Lost_Connect	
+					
 Connect
-	mov    r0, #'C' 
+	; 存储入口地址
+	mov 	r4,	lr
+	mov    r0, #' ' 
 		bl     send_a_char
-	
+
+	mov    r0, #'C' 
+    bl     send_a_char
+		
 	mov    r0, #'o' 
     bl     send_a_char
 	
@@ -369,11 +358,17 @@ Connect
     bl     send_a_char
 	
 	mov    r0, #'\n' 
-    bl     send_a_char
+    bl     send_a_char 	
 		
-	b Usart_End	
-	
+	bx     r4 
+
 Lost_Connect
+	; 存储入口地址
+	mov 	r4,	lr
+	
+	mov    r0, #' ' 
+		bl     send_a_char
+		
 	mov    r0, #'L' 
 		bl     send_a_char
 		
@@ -422,13 +417,24 @@ Lost_Connect
 	mov    r0, #'\n' 
     bl     send_a_char
 
-Usart_End
+	bx r4 
 
-	bx lr
-	END
+;子程序 串口1发送一个字符 
+send_a_char 
+    push   {r0 - r3} 
+    ldr    r2, =USART1_DR   
+    str    r0, [r2] 
+b1 
+    ldr    r2, =USART1_SR  
+    ldr    r2, [r2] 
+    tst    r2, #0x40 
+    beq    b1 
+    ;发送完成(Transmission complete)等待 
+    pop    {r0 - r3} 
+    bx     lr 
 
 ;延时函数/1us
-		AREA Delay_Function, CODE, READONLY
+;		AREA Delay_Function, CODE, READONLY
 		EXPORT Delay
 Delay
 	NOP
@@ -463,10 +469,9 @@ Delay
 	NOP
 	
 	bx lr
-	END
 		                
 ;子程序 LED闪烁 
-  AREA LED_Function,CODE,READONLY
+;  AREA LED_Function,CODE,READONLY
 	EXPORT LedFlas
 LedFlas      
     push   {r0 - r3} 
@@ -485,7 +490,7 @@ LedFlas
     ldr    r1, [r0] 
     orr    r1, #Bit13 
     str    r1, [r0] 
-    b      LedEx 
+    b      LedExit 
 ONLED       
     ;为0 打开led灯 
     ldr    r0, =b_flas 
@@ -497,7 +502,7 @@ ONLED
     ldr    r1, [r0] 
     orr    r1, #Bit13
     str    r1, [r0] 
-LedEx        
+LedExit        
     pop    {r0 - r3} 
     bx     lr 
                                                                            

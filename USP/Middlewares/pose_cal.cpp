@@ -49,7 +49,7 @@ Pose_Cal imu_cal(&imu);
  */ 
 void Pose_Cal::Tetris_AngleCtrl(QueueHandle_t send_queue)
 {
-	uint8_t num, signal;
+	uint8_t signal;
 	
 	// 右
 	if(p_imu->data.pos.pitch > 15.f &&  p_imu->data.pos.pitch < 80.f)
